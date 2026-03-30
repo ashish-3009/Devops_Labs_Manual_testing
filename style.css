@@ -1,0 +1,428 @@
+/* ── CSS Variables ── */
+:root {
+  --deep: #0a0f1e;
+  --panel: #111827;
+  --border: #1e2d47;
+  --accent: #c8a96e;
+  --accent2: #e8c98a;
+  --text: #e8e4dc;
+  --muted: #7a8499;
+  --err: #e05c5c;
+  --ok: #4caf82;
+  --radius: 12px;
+  --trans: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Reset & Base ── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+html {
+  font-size: 16px;
+}
+
+body {
+  font-family: "DM Sans", sans-serif;
+  background: var(--deep);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ── Animated background mesh ── */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 15% 10%, #1a2a4a55 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 85% 80%, #2a1a0a44 0%, transparent 55%),
+    radial-gradient(ellipse 40% 40% at 50% 50%, #0d1a3022 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Card ── */
+.card {
+  position: relative;
+  z-index: 1;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 3rem 3.5rem;
+  width: 100%;
+  max-width: 560px;
+  box-shadow:
+    0 40px 80px #00000066,
+    0 0 0 1px #ffffff08 inset,
+    0 1px 0 #ffffff14 inset;
+  animation: cardIn 0.6s ease both;
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ── Header ── */
+.logo-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.8rem;
+}
+
+.logo-icon {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  box-shadow: 0 4px 16px #c8a96e44;
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+}
+.logo-text span:first-child {
+  font-family: "Playfair Display", serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1.1;
+  letter-spacing: 0.04em;
+}
+.logo-text span:last-child {
+  font-size: 0.72rem;
+  color: var(--muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+h1 {
+  font-family: "Playfair Display", serif;
+  font-size: 1.85rem;
+  font-weight: 900;
+  color: var(--text);
+  line-height: 1.2;
+  margin-bottom: 0.4rem;
+}
+.subtitle {
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-bottom: 2.4rem;
+  letter-spacing: 0.03em;
+}
+
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border), transparent);
+  margin-bottom: 2rem;
+}
+
+/* ── Form Fields ── */
+.field {
+  margin-bottom: 1.4rem;
+}
+
+label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+  transition: color var(--trans);
+}
+
+.field:focus-within label {
+  color: var(--accent);
+}
+
+.input-wrap {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  pointer-events: none;
+  opacity: 0.55;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+select {
+  width: 100%;
+  padding: 0.8rem 1rem 0.8rem 2.6rem;
+  background: #0d1523;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  transition:
+    border-color var(--trans),
+    box-shadow var(--trans),
+    background var(--trans);
+  appearance: none;
+}
+
+input:focus,
+select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px #c8a96e22;
+  background: #111e30;
+}
+
+input.valid {
+  border-color: var(--ok);
+}
+input.invalid {
+  border-color: var(--err);
+}
+
+select {
+  cursor: pointer;
+}
+select option {
+  background: var(--panel);
+}
+
+/* custom arrow for select */
+.select-wrap::after {
+  content: "▾";
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  pointer-events: none;
+  font-size: 0.85rem;
+}
+
+/* ── Gender Checkboxes ── */
+.gender-group {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.gender-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.55rem 1rem;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  background: #0d1523;
+  transition: all var(--trans);
+  user-select: none;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.gender-option:hover {
+  border-color: var(--accent);
+  color: var(--text);
+}
+
+.gender-option input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent);
+  cursor: pointer;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.gender-option.checked {
+  border-color: var(--accent);
+  background: #1a1508;
+  color: var(--accent2);
+}
+
+/* ── Validation Messages ── */
+.msg {
+  font-size: 0.74rem;
+  margin-top: 0.35rem;
+  min-height: 1rem;
+  letter-spacing: 0.02em;
+  transition: all var(--trans);
+}
+.msg.err {
+  color: var(--err);
+}
+.msg.ok {
+  color: var(--ok);
+}
+
+/* ── Password Strength ── */
+.strength-bar {
+  display: flex;
+  gap: 4px;
+  margin-top: 0.5rem;
+}
+.strength-bar span {
+  flex: 1;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--border);
+  transition: background var(--trans);
+}
+.strength-bar.s1 span:nth-child(1) {
+  background: var(--err);
+}
+.strength-bar.s2 span:nth-child(-n + 2) {
+  background: #e07d2a;
+}
+.strength-bar.s3 span:nth-child(-n + 3) {
+  background: var(--accent);
+}
+.strength-bar.s4 span {
+  background: var(--ok);
+}
+
+/* ── Submit Button ── */
+.btn {
+  width: 100%;
+  padding: 0.95rem;
+  margin-top: 0.6rem;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  border: none;
+  border-radius: var(--radius);
+  color: #0a0f1e;
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 4px 24px #c8a96e33;
+  transition: all var(--trans);
+  position: relative;
+  overflow: hidden;
+}
+.btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #ffffff22, transparent);
+  opacity: 0;
+  transition: opacity var(--trans);
+}
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px #c8a96e55;
+}
+.btn:hover::after {
+  opacity: 1;
+}
+.btn:active {
+  transform: translateY(0);
+}
+
+/* ── Success overlay ── */
+.success-overlay {
+  display: none;
+  position: absolute;
+  inset: 0;
+  background: var(--panel);
+  border-radius: 20px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  text-align: center;
+  padding: 3rem;
+  z-index: 10;
+  animation: cardIn 0.4s ease both;
+}
+.success-overlay.show {
+  display: flex;
+}
+.success-icon {
+  font-size: 4rem;
+  animation: pop 0.5s cubic-bezier(0.36, 1.6, 0.5, 1) both;
+}
+@keyframes pop {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.success-overlay h2 {
+  font-family: "Playfair Display", serif;
+  font-size: 1.8rem;
+  color: var(--text);
+}
+.success-overlay p {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+.btn-back {
+  margin-top: 0.5rem;
+  padding: 0.7rem 2rem;
+  background: transparent;
+  border: 1.5px solid var(--accent);
+  border-radius: var(--radius);
+  color: var(--accent);
+  font-family: "DM Sans", sans-serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all var(--trans);
+}
+.btn-back:hover {
+  background: var(--accent);
+  color: #0a0f1e;
+}
+
+/* ── Footer note ── */
+.foot {
+  text-align: center;
+  margin-top: 1.8rem;
+  font-size: 0.74rem;
+  color: var(--muted);
+  letter-spacing: 0.03em;
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .card {
+    padding: 2rem 1.5rem;
+  }
+  h1 {
+    font-size: 1.5rem;
+  }
+}

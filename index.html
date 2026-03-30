@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Symbiosis Admission Registration</title>
+
+    <!-- ===== EXTERNAL CSS (Google Fonts) ===== -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div class="card" id="card">
+      <!-- Success overlay -->
+      <div class="success-overlay" id="successOverlay">
+        <div class="success-icon">🎓</div>
+        <h2>Registration Successful!</h2>
+        <p>
+          Welcome to Symbiosis International University.<br />Your application
+          has been received.
+        </p>
+        <button class="btn-back" onclick="resetForm()">Register Another</button>
+      </div>
+
+      <!-- Header -->
+      <div class="logo-row">
+        <div class="logo-icon">🎓</div>
+        <div class="logo-text">
+          <span>Symbiosis International</span>
+          <span>University · Nagpur</span>
+        </div>
+      </div>
+
+      <h1>Admission Registration</h1>
+      <p class="subtitle">
+        Academic Year 2025 – 26 &nbsp;|&nbsp; Undergraduate Programs
+      </p>
+      <div class="divider"></div>
+
+      <!-- Form -->
+      <form id="regForm" novalidate autocomplete="off">
+        <!-- Name -->
+        <div class="field">
+          <label for="name">Full Name</label>
+          <div class="input-wrap">
+            <span class="input-icon">👤</span>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="e.g. Ananya Sharma"
+            />
+          </div>
+          <div class="msg" id="nameMsg"></div>
+        </div>
+
+        <!-- Email -->
+        <div class="field">
+          <label for="email">Email Address</label>
+          <div class="input-wrap">
+            <span class="input-icon">✉️</span>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="you@example.com"
+            />
+          </div>
+          <div class="msg" id="emailMsg"></div>
+        </div>
+
+        <!-- Password -->
+        <div class="field">
+          <label for="password">Password</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔒</span>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Min. 8 characters"
+            />
+          </div>
+          <div class="strength-bar" id="strengthBar">
+            <span></span><span></span><span></span><span></span>
+          </div>
+          <div class="msg" id="passwordMsg"></div>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="field">
+          <label for="confirm">Confirm Password</label>
+          <div class="input-wrap">
+            <span class="input-icon">🔑</span>
+            <input
+              type="password"
+              id="confirm"
+              name="confirm"
+              placeholder="Re-enter password"
+            />
+          </div>
+          <div class="msg" id="confirmMsg"></div>
+        </div>
+
+        <!-- Gender -->
+        <div class="field">
+          <label>Gender</label>
+          <div class="gender-group" id="genderGroup">
+            <label class="gender-option" id="lbl-male">
+              <input
+                type="checkbox"
+                name="gender"
+                value="Male"
+                id="gMale"
+                onchange="handleGender(this)"
+              />
+              ♂ Male
+            </label>
+            <label class="gender-option" id="lbl-female">
+              <input
+                type="checkbox"
+                name="gender"
+                value="Female"
+                id="gFemale"
+                onchange="handleGender(this)"
+              />
+              ♀ Female
+            </label>
+            <label class="gender-option" id="lbl-other">
+              <input
+                type="checkbox"
+                name="gender"
+                value="Other"
+                id="gOther"
+                onchange="handleGender(this)"
+              />
+              ⚧ Other
+            </label>
+          </div>
+          <div class="msg" id="genderMsg"></div>
+        </div>
+
+        <!-- Course -->
+        <div class="field">
+          <label for="course">Select Course</label>
+          <div class="input-wrap select-wrap">
+            <span class="input-icon">📚</span>
+            <select id="course" name="course">
+              <option value="">— Choose a Programme —</option>
+              <optgroup label="Management">
+                <option value="bba">BBA – Business Administration</option>
+                <option value="mba">
+                  MBA – Master of Business Administration
+                </option>
+              </optgroup>
+              <optgroup label="Technology">
+                <option value="btech_cs">B.Tech – Computer Science</option>
+                <option value="btech_it">
+                  B.Tech – Information Technology
+                </option>
+                <option value="mtech">M.Tech – Computer Engineering</option>
+              </optgroup>
+              <optgroup label="Law">
+                <option value="ba_llb">BA LLB – Integrated Law</option>
+                <option value="llm">LLM – Master of Laws</option>
+              </optgroup>
+              <optgroup label="Arts & Science">
+                <option value="bsc_cs">B.Sc – Computer Science</option>
+                <option value="ba_econ">BA – Economics</option>
+                <option value="ma_eng">MA – English Literature</option>
+              </optgroup>
+            </select>
+          </div>
+          <div class="msg" id="courseMsg"></div>
+        </div>
+
+        <button type="submit" class="btn" id="submitBtn">
+          Submit Application →
+        </button>
+      </form>
+
+      <p class="foot">
+        © 2025 Symbiosis International University · All rights reserved
+      </p>
+    </div>
+
+    <!-- ===== JAVASCRIPT VALIDATION ===== -->
+    <script>
+      /* ─── Helpers ─── */
+      const $ = (id) => document.getElementById(id);
+
+      function setMsg(id, text, type) {
+        const el = $(id);
+        el.textContent = text;
+        el.className = "msg " + (type || "");
+      }
+
+      function setValidity(inputId, valid) {
+        const inp = $(inputId);
+        inp.classList.remove("valid", "invalid");
+        if (valid === true) inp.classList.add("valid");
+        if (valid === false) inp.classList.add("invalid");
+      }
+
+      /* ─── Name ─── */
+      $("name").addEventListener("input", validateName);
+      function validateName() {
+        const v = $("name").value.trim();
+        if (!v) {
+          setMsg("nameMsg", "Full name is required.", "err");
+          setValidity("name", false);
+          return false;
+        }
+        if (v.length < 3) {
+          setMsg("nameMsg", "Name must be at least 3 characters.", "err");
+          setValidity("name", false);
+          return false;
+        }
+        if (!/^[A-Za-z\s'-]+$/.test(v)) {
+          setMsg(
+            "nameMsg",
+            "Name may only contain letters, spaces, hyphens, apostrophes.",
+            "err",
+          );
+          setValidity("name", false);
+          return false;
+        }
+        setMsg("nameMsg", "✓ Looks good!", "ok");
+        setValidity("name", true);
+        return true;
+      }
+
+      /* ─── Email ─── */
+      $("email").addEventListener("input", validateEmail);
+      function validateEmail() {
+        const v = $("email").value.trim();
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+        if (!v) {
+          setMsg("emailMsg", "Email address is required.", "err");
+          setValidity("email", false);
+          return false;
+        }
+        if (!re.test(v)) {
+          setMsg("emailMsg", "Please enter a valid email address.", "err");
+          setValidity("email", false);
+          return false;
+        }
+        setMsg("emailMsg", "✓ Valid email address.", "ok");
+        setValidity("email", true);
+        return true;
+      }
+
+      /* ─── Password ─── */
+      $("password").addEventListener("input", validatePassword);
+      function passwordStrength(p) {
+        let s = 0;
+        if (p.length >= 8) s++;
+        if (/[A-Z]/.test(p)) s++;
+        if (/[0-9]/.test(p)) s++;
+        if (/[^A-Za-z0-9]/.test(p)) s++;
+        return s;
+      }
+
+      function validatePassword() {
+        const v = $("password").value;
+        const bar = $("strengthBar");
+        bar.className = "strength-bar";
+
+        if (!v) {
+          setMsg("passwordMsg", "Password is required.", "err");
+          setValidity("password", false);
+          return false;
+        }
+        if (v.length < 8) {
+          setMsg(
+            "passwordMsg",
+            "Password must be at least 8 characters.",
+            "err",
+          );
+          setValidity("password", false);
+          bar.classList.add("s1");
+          return false;
+        }
+        const s = passwordStrength(v);
+        const labels = ["", "Weak", "Fair", "Strong", "Very Strong"];
+        const types = ["", "err", "", "ok", "ok"];
+        bar.classList.add("s" + s);
+        setMsg("passwordMsg", "● Strength: " + labels[s], types[s]);
+        setValidity("password", s >= 2);
+        if ($("confirm").value) validateConfirm();
+        return s >= 2;
+      }
+
+      /* ─── Confirm Password ─── */
+      $("confirm").addEventListener("input", validateConfirm);
+      function validateConfirm() {
+        const p = $("password").value;
+        const c = $("confirm").value;
+        if (!c) {
+          setMsg("confirmMsg", "Please confirm your password.", "err");
+          setValidity("confirm", false);
+          return false;
+        }
+        if (p !== c) {
+          setMsg("confirmMsg", "Passwords do not match.", "err");
+          setValidity("confirm", false);
+          return false;
+        }
+        setMsg("confirmMsg", "✓ Passwords match.", "ok");
+        setValidity("confirm", true);
+        return true;
+      }
+
+      /* ─── Gender (single-select via checkboxes) ─── */
+      function handleGender(clicked) {
+        document.querySelectorAll('input[name="gender"]').forEach((cb) => {
+          cb.checked = cb === clicked && clicked.checked;
+          const lbl = cb.parentElement;
+          lbl.classList.toggle("checked", cb.checked);
+        });
+        validateGender();
+      }
+
+      function validateGender() {
+        const checked = document.querySelector('input[name="gender"]:checked');
+        if (!checked) {
+          setMsg("genderMsg", "Please select a gender.", "err");
+          return false;
+        }
+        setMsg("genderMsg", "✓ " + checked.value + " selected.", "ok");
+        return true;
+      }
+
+      /* ─── Course ─── */
+      $("course").addEventListener("change", validateCourse);
+      function validateCourse() {
+        const v = $("course").value;
+        if (!v) {
+          setMsg("courseMsg", "Please select a course.", "err");
+          return false;
+        }
+        setMsg("courseMsg", "✓ Course selected.", "ok");
+        return true;
+      }
+
+      /* ─── Form Submit ─── */
+      $("regForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        const ok = [
+          validateName(),
+          validateEmail(),
+          validatePassword(),
+          validateConfirm(),
+          validateGender(),
+          validateCourse(),
+        ].every(Boolean);
+
+        if (ok) $("successOverlay").classList.add("show");
+      });
+
+      /* ─── Reset ─── */
+      function resetForm() {
+        $("regForm").reset();
+        $("successOverlay").classList.remove("show");
+        ["name", "email", "password", "confirm"].forEach((id) => {
+          $(id).classList.remove("valid", "invalid");
+        });
+        [
+          "nameMsg",
+          "emailMsg",
+          "passwordMsg",
+          "confirmMsg",
+          "genderMsg",
+          "courseMsg",
+        ].forEach((id) => {
+          $(id).textContent = "";
+        });
+        $("strengthBar").className = "strength-bar";
+        document.querySelectorAll('input[name="gender"]').forEach((cb) => {
+          cb.checked = false;
+          cb.parentElement.classList.remove("checked");
+        });
+      }
+    </script>
+  </body>
+</html>
